@@ -1,0 +1,16 @@
+workflows:
+  ios-workflow:
+    name: iOS Debug Build
+    max_build_duration: 60
+    scripts:
+      - name: Install dependencies
+        script: |
+          echo "No dependencies needed for this simple Swift app"
+    environment:
+      flutter: false
+      xcode: latest
+    triggering:
+      events:
+        - push
+    ios:
+      export_method: development
