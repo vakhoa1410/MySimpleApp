@@ -1,18 +1,5 @@
 workflows:
-  ios-simple-app:
-    name: iOS Simple App Debug
-    max_build_duration: 60
-    triggering:
-      events:
-        - push
-    environment:
-      flutter: false
-      xcode: latest
-    scripts:
-      - name: Pre-build
-        script: |
-          echo "No dependencies needed for simple Swift app"
-    ios:
-      scheme: MySimpleApp
-      export_method: development
-      # Codemagic will automatically manage signing for free Apple ID
+    sample-workflow:
+        name: Codemagic Sample Workflow
+        max_build_duration: 120
+        instance_type: mac_mini_m2
