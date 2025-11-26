@@ -1,5 +1,28 @@
 workflows:
-    sample-workflow:
-        name: Codemagic Sample Workflow
-        max_build_duration: 120
-        instance_type: mac_mini_m2
+  ios-unsigned:
+    name: Native iOS Sideload
+    max_build_duration: 60
+    environment:
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          # Install pods if using CocoaPods
+          if [ -f "Podfile" ]; then
+            pod install
+          fi
+      - name: Build IPA
+        script: |
+          # Archive the app
+          xcodebuild -workspace MySimpleApp.xcworkspace \
+                     -scheme MySimpleApp \
+                     -configuration Release \
+                     -archivePath $CM_BUILD_DIR/build/MySimpleApp.xcarchive archive
+
+          # Export unsigned IPA
+          xcodebuild -exportArchive \
+                     -archivePath $CM_BUILD_DIR/build/MySimpleApp.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath $CM_BUILD_DIR/build/ipa
+    artifacts:
+      - build/ipa/*.ipa
