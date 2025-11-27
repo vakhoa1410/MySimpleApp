@@ -1,28 +1,32 @@
 workflows:
   ios-unsigned:
-    name: Native iOS Sideload
+    name: Native iOS Build (Unsigned)
     max_build_duration: 60
     environment:
       xcode: latest
     scripts:
       - name: Install dependencies
         script: |
-          # Install pods if using CocoaPods
+          echo "Installing CocoaPods if Podfile exists..."
           if [ -f "Podfile" ]; then
             pod install
           fi
-      - name: Build IPA
+
+      - name: Archive App
         script: |
-          # Archive the app
+          echo "Archiving MySimpleApp..."
           xcodebuild -workspace MySimpleApp.xcworkspace \
                      -scheme MySimpleApp \
                      -configuration Release \
                      -archivePath $CM_BUILD_DIR/build/MySimpleApp.xcarchive archive
 
-          # Export unsigned IPA
+      - name: Export IPA (Unsigned)
+        script: |
+          echo "Exporting unsigned IPA..."
           xcodebuild -exportArchive \
                      -archivePath $CM_BUILD_DIR/build/MySimpleApp.xcarchive \
                      -exportOptionsPlist ExportOptions.plist \
                      -exportPath $CM_BUILD_DIR/build/ipa
+
     artifacts:
       - build/ipa/*.ipa
